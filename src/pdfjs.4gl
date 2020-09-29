@@ -56,6 +56,7 @@ FUNCTION copyToPublic(fname)
 	DEFINE sepIdx INT
 	DEFINE use_public BOOLEAN
 	--GAS sets this variables, to they are only available in GAS mode
+	DISPLAY fname TO file
 	LET use_public = fgl_getenv("USE_PUBLIC") IS NOT NULL
 	LET pubdir = fgl_getenv("FGL_PUBLIC_DIR")
 	LET pubimgpath = fgl_getenv("FGL_PUBLIC_IMAGEPATH")
@@ -71,6 +72,7 @@ FUNCTION copyToPublic(fname)
 		--which means anybody knowing the file name can access it
 		--if our file name is hello.pdf the http name is then http://localhost:xxx/ua/i/common/hello.pdf?t=xxxxxxx
 		IF use_public THEN
+			DISPLAY pubname TO file
 			IF NOT os.path.exists( pubdir ) THEN
 				IF os.path.mkdir( pubdir ) THEN
 					CALL debug(SFMT("%1 didn't exist, created.", pubdir ))
@@ -88,6 +90,7 @@ FUNCTION copyToPublic(fname)
 			ELSE
 				CALL debug( SFMT("File already exists in public location: %1", pubname) )
 			END IF
+			LET fname = os.Path.baseName(fname)
 		ELSE
 			--remove any potential leftovers
 			--CALL os.Path.delete(pubname) RETURNING status
@@ -122,6 +125,7 @@ FUNCTION displayPDF(fname)
 		CALL debug( SFMT("Remote File: %1 ( %2 )", remoteName, IIF(os.path.exists(remoteName),"Exists","Missing!") ) )
 	END IF
 	CALL debug(SFMT("Attempting to display: %1", remoteName ))
+	DISPLAY remoteName TO url
 	CALL ui.interface.frontcall("webcomponent", "call", ["formonly.w", "displayPDF", remoteName], [])
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------

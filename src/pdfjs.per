@@ -20,11 +20,13 @@ LAYOUT (TEXT="PDF WC Demo", STYLE="main2")
 VBOX ( SPLITTER )
 GRID 
 {
-[w                                        ]
-[                                         ]
-[                                         ]
-[                                         ]
-[                                         ]
+File[file                                                                                ]
+URL [url                                                                                 ]
+[w                                                                                       ]
+[                                                                                        ]
+[                                                                                        ]
+[                                                                                        ]
+[                                                                                        ]
 }
 END -- GRID
 GRID
@@ -36,6 +38,8 @@ END -- GRID
 END -- VBOX
 
 ATTRIBUTES
+file=FORMONLY.file;
+url=FORMONLY.url;
 WEBCOMPONENT w=FORMONLY.w,COMPONENTTYPE="web",SIZEPOLICY=FIXED,STRETCH=BOTH;
 TEXTEDIT debug = FORMONLY.m_debug, NOENTRY, STRETCH=BOTH;
 IMAGE img = FORMONLY.img, AUTOSCALE;
