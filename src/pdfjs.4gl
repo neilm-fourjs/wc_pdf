@@ -17,7 +17,6 @@ MAIN
 	CALL debug( SFMT("FGLIMAGEPATH: %1\nFILELOC: %2", fgl_getEnv("FGLIMAGEPATH"), fgl_getEnv("FILELOC") ) )
 	CALL debug( SFMT("USE_PUBLIC: %1\nFGL_PUBLIC_DIR: %2\nFGL_PUBLIC_IMAGEPATH: %3", fgl_getenv("USE_PUBLIC"), fgl_getenv("FGL_PUBLIC_DIR"), fgl_getenv("FGL_PUBLIC_IMAGEPATH")) )
 
-	--DISPLAY os.path.join(fileLocation,"tumbleweed.gif") TO img
 	DISPLAY ui.Interface.filenameToURI( os.path.join(fileLocation,"tumbleweed.gif") ) TO img
 
 	INPUT BY NAME w, m_debug WITHOUT DEFAULTS ATTRIBUTE(UNBUFFERED, ACCEPT = FALSE)
@@ -50,8 +49,9 @@ MAIN
 	END INPUT
 END MAIN
 --------------------------------------------------------------------------------------------------------------
-FUNCTION copyToPublic(fname)
-	DEFINE fname, pubdir, pubimgpath, pubname STRING
+-- Copy the PDF file to the correction and return the value to display to the WebComponent.
+FUNCTION copyToPublic(fname STRING) RETURNS STRING
+	DEFINE pubdir, pubimgpath, pubname STRING
 	DEFINE remoteName STRING
 	DEFINE sepIdx INT
 	DEFINE use_public BOOLEAN
@@ -103,8 +103,8 @@ FUNCTION copyToPublic(fname)
 	RETURN remoteName
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
-FUNCTION displayPDF(fname)
-	DEFINE fname, remoteName STRING
+FUNCTION displayPDF(fname STRING) RETURNS ()
+	DEFINE remoteName STRING
 	LET remoteName = copyToPublic(fname)
 	CALL debug( SFMT("Local File: %1 ( %2 )", fname, IIF(os.path.exists(fname),"Exists","Missing!")))
 	IF remoteName.subString(1,4) = "http" THEN
@@ -118,7 +118,7 @@ FUNCTION displayPDF(fname)
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- OS packages required to download and patch the PDF js library.
-FUNCTION check_prerequisites()
+FUNCTION check_prerequisites() RETURNS ()
 	DEFINE code INT
 	RUN "curl --help > /dev/null" RETURNING code
 	IF code THEN
@@ -138,7 +138,7 @@ FUNCTION check_prerequisites()
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 -- My debug display function
-FUNCTION debug(l_msg STRING)
+FUNCTION debug(l_msg STRING) RETURNS ()
 	DISPLAY l_msg
 	LET m_debug = m_debug.append(l_msg || "\n")
 END FUNCTION
