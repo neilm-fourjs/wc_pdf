@@ -55,9 +55,12 @@ FUNCTION copyToPublic(fname)
 	DEFINE remoteName STRING
 	DEFINE sepIdx INT
 	DEFINE use_public BOOLEAN
-	--GAS sets this variables, to they are only available in GAS mode
+
 	DISPLAY fname TO file
+  --enable the copy to a public location
 	LET use_public = fgl_getenv("USE_PUBLIC") IS NOT NULL
+
+	--GAS sets this variables, to they are only available in GAS mode
 	LET pubdir = fgl_getenv("FGL_PUBLIC_DIR")
 	LET pubimgpath = fgl_getenv("FGL_PUBLIC_IMAGEPATH")
 	IF pubdir IS NOT NULL AND os.Path.exists(pubdir) THEN
@@ -73,8 +76,8 @@ FUNCTION copyToPublic(fname)
 		--if our file name is hello.pdf the http name is then http://localhost:xxx/ua/i/common/hello.pdf?t=xxxxxxx
 		IF use_public THEN
 			DISPLAY pubname TO file
-			IF NOT os.path.exists( pubdir ) THEN
-				IF os.path.mkdir( pubdir ) THEN
+			IF NOT os.path.exists( pubdir ) THEN -- check to see if target sub folder exists
+				IF os.path.mkdir( pubdir ) THEN -- attempt to create the target sub folder.
 					CALL debug(SFMT("%1 didn't exist, created.", pubdir ))
 				ELSE
 					CALL debug(SFMT("%1 didn't exist, create failed %2", pubdir, ERR_GET(STATUS) ))
@@ -90,7 +93,7 @@ FUNCTION copyToPublic(fname)
 			ELSE
 				CALL debug( SFMT("File already exists in public location: %1", pubname) )
 			END IF
-			LET fname = os.Path.baseName(fname)
+			LET fname = os.Path.baseName(fname) -- vital to remove any path from file name here!
 		ELSE
 			--remove any potential leftovers
 			--CALL os.Path.delete(pubname) RETURNING status
@@ -102,21 +105,6 @@ END FUNCTION
 --------------------------------------------------------------------------------------------------------------
 FUNCTION displayPDF(fname)
 	DEFINE fname, remoteName STRING
-
-	IF NOT os.path.exists( fname ) THEN
-		IF os.path.exists( fname.trim()||".gz" ) THEN -- gar process compressed our file?!
-			--RUN "gzip -d "||fname
-			LET fname = fname.trim()||".gz"
-			CALL debug(SFMT("File name changed to: %1", fname))
-		ELSE
-			CALL debug(SFMT("Failed to find file or .gz version: %1", fname))
-		END IF
-	ELSE
-		IF os.path.size( fname ) = 0 THEN
-			CALL debug(SFMT("File %1 is zero sized!", fname))
-		END IF
-	END IF
-
 	LET remoteName = copyToPublic(fname)
 	CALL debug( SFMT("Local File: %1 ( %2 )", fname, IIF(os.path.exists(fname),"Exists","Missing!")))
 	IF remoteName.subString(1,4) = "http" THEN
@@ -129,6 +117,7 @@ FUNCTION displayPDF(fname)
 	CALL ui.interface.frontcall("webcomponent", "call", ["formonly.w", "displayPDF", remoteName], [])
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
+-- OS packages required to download and patch the PDF js library.
 FUNCTION check_prerequisites()
 	DEFINE code INT
 	RUN "curl --help > /dev/null" RETURNING code
@@ -148,6 +137,7 @@ FUNCTION check_prerequisites()
 	END IF}
 END FUNCTION
 --------------------------------------------------------------------------------------------------------------
+-- My debug display function
 FUNCTION debug(l_msg STRING)
 	DISPLAY l_msg
 	LET m_debug = m_debug.append(l_msg || "\n")
