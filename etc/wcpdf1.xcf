@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<APPLICATION Parent="defaultgdc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.4js.com/ns/gas/3.00/cfextwa.xsd">
+	<EXECUTION>
+		<!--ENVIRONMENT_VARIABLE Id="FGLPROFILE">fglprofile</ENVIRONMENT_VARIABLE-->
+		<ENVIRONMENT_VARIABLE Id="FGLIMAGEPATH">$(res.fgldir)/lib/image2font.txt</ENVIRONMENT_VARIABLE>
+		<ENVIRONMENT_VARIABLE Id="LANG">en_GB.UTF-8</ENVIRONMENT_VARIABLE>
+		<ENVIRONMENT_VARIABLE Id="USE_PUBLIC">1</ENVIRONMENT_VARIABLE>
+		<ENVIRONMENT_VARIABLE Id="FILELOC">./myfiles</ENVIRONMENT_VARIABLE>
+		<PATH>$(res.deployment.path)</PATH>
+		<MODULE>pdfjs.42r</MODULE>
+		<WEB_COMPONENT_DIRECTORY>$(res.deployment.path)/webcomponents</WEB_COMPONENT_DIRECTORY>
+	</EXECUTION>
+	<UA_OUTPUT>
+     <PROXY></PROXY>
+     <PUBLIC_IMAGEPATH>myfiles</PUBLIC_IMAGEPATH>
+	</UA_OUTPUT>
+</APPLICATION>
