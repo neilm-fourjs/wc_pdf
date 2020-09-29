@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>Clock</title>
+</head>
+
+<body style="padding:0;margin:0;">
+<!--div style="padding:1;margin:0;background: black;"-->
+<canvas id="clock" width="40" height="44">
+<script>
+clock();  
+setInterval(clock,1000);  
+
+function clock(){  
+	var now = new Date();  
+	var ctx = document.getElementById('clock').getContext('2d');  
+	var l_w = document.getElementById('clock').getAttribute('width');
+	var l_h = document.getElementById('clock').getAttribute('height');
+	//Create a radial gradient.
+	//var gradient = ctx.createRadialGradient(90,63,30,90,63,90);
+	var gradient = ctx.createLinearGradient(0,0,0,l_h);
+	gradient.addColorStop(0, '#F8F8FC');
+	gradient.addColorStop(1, '#BAB8CE'); 
+  //Create radial gradient box for picture frame;
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,l_w,l_h); // clears images with a gradient fill
+
+	ctx.save();  
+
+	//ctx.clearRect(0,0,150,150); // Clear area, not needed now due to fillRect above.
+	ctx.translate( l_w/2 ,l_h/2); // Move drawing to middle of canvas
+	ctx.scale(.12,.12);   // Scale the clock because we are using a fixed sizes.
+	ctx.rotate(-Math.PI/2);  
+	ctx.strokeStyle = "black";  
+	ctx.fillStyle = "white";  
+	ctx.lineWidth = 8;  
+	ctx.lineCap = "round";  
+
+	// Hour marks  
+	ctx.save();  
+	for (var i=0;i<12;i++){  
+  	ctx.beginPath();  
+  	ctx.rotate(Math.PI/6);  
+  	ctx.moveTo(100,0);  
+  	ctx.lineTo(120,0);  
+  	ctx.stroke();  
+	}  
+	ctx.restore();  
+
+	// Minute marks  
+	ctx.save();  
+	ctx.lineWidth = 5;  
+	for (i=0;i<60;i++){  
+  	if (i%5!=0) {  
+    	ctx.beginPath();  
+    	ctx.moveTo(117,0);  
+    	ctx.lineTo(120,0);  
+    	ctx.stroke();  
+  	}  
+  	ctx.rotate(Math.PI/30);  
+	}  
+	ctx.restore();  
+  
+	var sec = now.getSeconds();  
+	var min = now.getMinutes();  
+	var hr  = now.getHours();  
+	hr = hr>=12 ? hr-12 : hr;  
+	
+	ctx.fillStyle = "black";  
+
+	// write Hours  
+	ctx.save();  
+	ctx.rotate( hr*(Math.PI/6) + (Math.PI/360)*min + (Math.PI/21600)*sec )  
+	ctx.lineWidth = 14;  
+	ctx.beginPath();  
+	ctx.moveTo(-20,0);  
+	ctx.lineTo(80,0);  
+	ctx.stroke();  
+	ctx.restore();  
+
+	// write Minutes  
+	ctx.save();  
+	ctx.rotate( (Math.PI/30)*min + (Math.PI/1800)*sec )  
+	ctx.lineWidth = 10;  
+	ctx.beginPath();  
+	ctx.moveTo(-28,0);  
+	ctx.lineTo(112,0);  
+	ctx.stroke();  
+	ctx.restore();  
+  
+	// Write seconds  
+	ctx.save();  
+	ctx.rotate(sec * Math.PI/30);  
+	ctx.strokeStyle = "#D40000";  
+	ctx.fillStyle = "#D40000";  
+	ctx.lineWidth = 6;  
+	ctx.beginPath();  
+	ctx.moveTo(-30,0);  
+	ctx.lineTo(83,0);  
+	ctx.stroke();  
+	ctx.beginPath();  
+	ctx.arc(0,0,10,0,Math.PI*2,true);  
+	ctx.fill();  
+	ctx.beginPath();  
+	ctx.arc(95,0,10,0,Math.PI*2,true);  
+	ctx.stroke();  
+	ctx.fillStyle = "#555";  
+	ctx.arc(0,0,3,0,Math.PI*2,true);  
+	ctx.fill();  
+	ctx.restore();  
+
+	ctx.beginPath();  
+	ctx.lineWidth = 14;  
+	ctx.strokeStyle = '#325FA2';  
+	ctx.arc(0,0,142,0,Math.PI*2,true);  
+	ctx.stroke();  
+
+	ctx.restore();  
+}
+
+var onICHostReady = function(version) {
+}
+
+</script>
+</canvas>
+<!--/div-->
+</body>
+</html>

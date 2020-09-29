@@ -69,7 +69,7 @@
       <File filePath="etc/wcpdf.xcf"/>
       <File filePath="etc/wcpdf1.xcf"/>
     </Library>
-    <Application binaryName="pdfjs" dependencies="14000,1986" environment="value:FILELOC=$(ProjectDir)/myfiles,value:FGLIMAGEPATH=$(ProjectDir):$(FGLDIR)/lib/image2font.txt" id="18736" label="pdfjs">
+    <Application binaryName="pdfjs" dependencies="14000,1986" environment="value:FILELOC=$(ProjectDir)/myfiles,value:FGLIMAGEPATH=$(FGLDIR)/lib/image2font.txt" id="18736" label="pdfjs">
       <File filePath="src/pdfjs.4gl"/>
       <File filePath="src/pdfjs.per"/>
     </Application>

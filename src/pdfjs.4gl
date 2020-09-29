@@ -22,7 +22,7 @@ MAIN
 	INPUT BY NAME w, m_debug WITHOUT DEFAULTS ATTRIBUTE(UNBUFFERED, ACCEPT = FALSE)
 		BEFORE INPUT
 			CALL DIALOG.setActionHidden("error", 1)
-			CALL displayPDF( os.path.join(fileLocation, FILE1) )
+			--CALL displayPDF( os.path.join(fileLocation, FILE1) )
 		ON ACTION file2
 			CALL displayPDF( os.path.join(fileLocation, FILE2) )
 		ON ACTION file1
